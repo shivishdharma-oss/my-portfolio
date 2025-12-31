@@ -1,147 +1,160 @@
-[index.html](https://github.com/user-attachments/files/24217066/index.html)
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shivish | Pro Portfolio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    <title>AETHER_HEALTH // Dharmendiran</title>
     <style>
-        :root { --bg: #f0f2f5; --card: white; --text: #333; --primary: #007bff; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
         
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg); color: var(--text); transition: 0.3s; overflow-x: hidden; }
-        header { background: #003366; color: white; padding: 60px 20px; text-align: center; }
-        
-        .container { 
-            max-width: 800px; 
-            margin: -40px auto 50px; 
-            background: var(--card); 
-            padding: 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            text-align: center; 
-            animation: slideUp 0.8s ease-out;
+        :root { 
+            --safe-green: #00ff88; 
+            --alert-red: #ff4444; 
+            --neon-cyan: #00f3ff; 
+            --bg-dark: #050505; 
         }
         
-        .profile-pic { border-radius: 50%; width: 120px; height: 120px; border: 5px solid white; margin-bottom: 15px; transition: 0.5s; }
-        .profile-pic:hover { transform: rotate(10deg) scale(1.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin: 20px 0; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .os-container { width: 95%; max-width: 1100px; height: 85vh; background: rgba(10, 10, 20, 0.95); border: 2px solid var(--neon-cyan); border-radius: 15px; display: grid; grid-template-columns: 250px 1fr; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
 
-        .social-icons { margin: 25px 0; }
-        .social-icons a { text-decoration: none; color: inherit; font-size: 1.8rem; margin: 0 15px; transition: 0.3s; display: inline-block; }
-        .social-icons a:hover { color: var(--primary); transform: translateY(-5px); }
+        /* LEFT PANEL: FAMILY MEMBERS */
+        .family-side { border-right: 1px solid rgba(0, 243, 255, 0.3); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .member-card { padding: 15px; border: 1px solid #333; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .member-card:hover, .member-card.active { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 10px; }
 
-        .btn { display: inline-block; padding: 12px 30px; background: var(--primary); color: white; text-decoration: none; border-radius: 30px; transition: 0.3s; border: none; cursor: pointer; }
-        .btn:active { transform: scale(0.95); }
+        /* MAIN CONTENT */
+        .main-content { padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 4px solid var(--neon-cyan); }
         
-        section { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        /* ALERT BOX */
+        .alert-banner { padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; display: none; }
+        .alert-danger { display: block; background: rgba(255, 68, 68, 0.2); border: 1px solid var(--alert-red); color: var(--alert-red); animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.6; } }
 
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1001;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-        }
-        #toast.show { visibility: visible; animation: slideUp 0.5s, slideUp 0.5s reverse 2.5s; }
+        /* INPUT AREA */
+        .input-group { background: #111; padding: 20px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid #333; }
+        input, select { background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; outline: none; }
+        button { background: var(--neon-cyan); border: none; padding: 10px 20px; color: black; font-weight: bold; cursor: pointer; border-radius: 5px; font-family: 'Orbitron'; }
     </style>
 </head>
-<body id="bodyTag">
+<body>
 
-    <button onclick="toggleDark()" style="position: fixed; top: 20px; right: 20px; padding: 10px 15px; cursor: pointer; z-index: 1000; border-radius: 50px; border: none; background: #333; color: white;">🌓 Toggle Mode</button>
-
-    <header>
-        <h1 id="greeting">Welcome to my Space</h1>
-    </header>
-
-    <main class="container">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Shivish" class="profile-pic">
-        <h2>Shivish</h2>
-        <p>Building the future, one line of code at a time.</p>
-
-        <nav class="social-icons">
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-x-twitter"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-        </nav>
-
-        <section>
-            <h3>Featured Content</h3>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/cWppAbqm9I8" allowfullscreen></iframe>
+    <div class="os-container">
+        <div class="family-side">
+            <h3 style="color:var(--neon-cyan); font-family: 'Orbitron'; margin-bottom: 20px;">FAMILY UNIT</h3>
+            <div class="member-card active" onclick="selectMember('Dad')">
+                <span class="status-dot" style="background:var(--safe-green)"></span> Dad
             </div>
-        </section>
+            <div class="member-card" onclick="selectMember('Mom')">
+                <span class="status-dot" style="background:var(--safe-green)"></span> Mom
+            </div>
+            <div class="member-card" onclick="selectMember('Kid 1')">
+                <span class="status-dot" id="kid-status" style="background:var(--safe-green)"></span> Kid 1
+            </div>
+        </div>
 
-        <section id="contact">
-            <h3>Send a Message</h3>
-            <form onsubmit="handleSubmit(event)">
-                <input type="text" id="userName" placeholder="Name" required style="width:100%; padding:10px; margin:5px 0; border-radius:5px; border:1px solid #ddd;">
-                <button type="submit" class="btn" style="margin-top:10px;">Send Message</button>
-            </form>
-        </section>
-    </main>
+        <div class="main-content">
+            <div id="healthAlert" class="alert-banner alert-danger">ALERT: SUGAR LIMIT EXCEEDED</div>
+            
+            <h1 id="memberName" style="font-family: 'Orbitron';">Profile: Dad</h1>
+            <p style="font-size: 12px; color: #888;">Lead Developer: Dharmendiran.ar</p>
 
-    <div id="toast">Message Sent Successfully! 🚀</div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <p style="font-size: 12px; color: #888;">Calories</p>
+                    <h2 id="calVal">0</h2>
+                </div>
+                <div class="stat-box">
+                    <p style="font-size: 12px; color: #888;">Sugar (g)</p>
+                    <h2 id="sugarVal">0</h2>
+                </div>
+                <div class="stat-box">
+                    <p style="font-size: 12px; color: #888;">Protein (g)</p>
+                    <h2 id="proVal">0</h2>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <select id="foodItem">
+                    <option value="apple">Apple (10g sugar)</option>
+                    <option value="soda">Soda (40g sugar)</option>
+                    <option value="chicken">Chicken (0g sugar)</option>
+                    <option value="donut">Donut (25g sugar)</option>
+                </select>
+                <button onclick="addIntake()">LOG INTAKE</button>
+                <button style="background:#444; color:white;" onclick="resetStats()">RESET</button>
+            </div>
+
+            <div id="history" style="font-size: 13px; color: #aaa; margin-top: 10px;">
+                Intake History: Waiting for data...
+            </div>
+        </div>
+    </div>
 
     <script>
-        if (localStorage.getItem('theme') === 'dark') {
-            applyDarkMode();
+        // DATA OBJECTS
+        let currentMember = "Dad";
+        let familyData = {
+            "Dad": { cal: 0, sugar: 0, pro: 0 },
+            "Mom": { cal: 0, sugar: 0, pro: 0 },
+            "Kid 1": { cal: 0, sugar: 0, pro: 0 }
+        };
+
+        const foodDb = {
+            "apple": { cal: 52, sugar: 10, pro: 1 },
+            "soda": { cal: 150, sugar: 40, pro: 0 },
+            "chicken": { cal: 200, sugar: 0, pro: 30 },
+            "donut": { cal: 250, sugar: 25, pro: 2 }
+        };
+
+        function selectMember(name) {
+            currentMember = name;
+            document.getElementById('memberName').innerText = "Profile: " + name;
+            // Update active state in UI
+            document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            updateDisplay();
         }
 
-        function toggleDark() {
-            if (localStorage.getItem('theme') !== 'dark') {
-                applyDarkMode();
-                localStorage.setItem('theme', 'dark');
+        function addIntake() {
+            const food = document.getElementById('foodItem').value;
+            const data = foodDb[food];
+
+            familyData[currentMember].cal += data.cal;
+            familyData[currentMember].sugar += data.sugar;
+            familyData[currentMember].pro += data.pro;
+
+            updateDisplay();
+            checkAlerts();
+        }
+
+        function updateDisplay() {
+            const m = familyData[currentMember];
+            document.getElementById('calVal').innerText = m.cal;
+            document.getElementById('sugarVal').innerText = m.sugar;
+            document.getElementById('proVal').innerText = m.pro;
+        }
+
+        function checkAlerts() {
+            const sugar = familyData[currentMember].sugar;
+            const alertBox = document.getElementById('healthAlert');
+            
+            if (sugar > 35) {
+                alertBox.style.display = 'block';
             } else {
-                applyLightMode();
-                localStorage.setItem('theme', 'light');
+                alertBox.style.display = 'none';
             }
         }
 
-        function applyDarkMode() {
-            document.body.style.backgroundColor = "#1e1e1e";
-            document.body.style.color = "white";
-            document.querySelector('.container').style.backgroundColor = "#2d2d2d";
+        function resetStats() {
+            familyData[currentMember] = { cal: 0, sugar: 0, pro: 0 };
+            updateDisplay();
+            checkAlerts();
         }
-
-        function applyLightMode() {
-            document.body.style.backgroundColor = "#f0f2f5";
-            document.body.style.color = "#333";
-            document.querySelector('.container').style.backgroundColor = "white";
-        }
-
-        function handleSubmit(event) {
-            event.preventDefault();
-            const name = document.getElementById('userName').value;
-            const toast = document.getElementById('toast');
-            
-            toast.innerText = `Thanks for reaching out, ${name}!`;
-            toast.className = "show";
-            
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-            
-            event.target.reset();
-        }
-
-        const hour = new Date().getHours();
-        const greet = hour < 12 ? "Morning" : hour < 18 ? "Afternoon" : "Evening";
-        document.getElementById('greeting').innerText = `Good ${greet}, I'm Shivish`;
     </script>
 </body>
 </html>
