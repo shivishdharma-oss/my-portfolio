@@ -2,159 +2,166 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER_HEALTH // Dharmendiran</title>
+    <title>AETHER_HEALTH // Shivish.ar</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
+        :root { --neon-cyan: #00f3ff; --alert-red: #ff4444; --safe-green: #00ff88; }
         
-        :root { 
-            --safe-green: #00ff88; 
-            --alert-red: #ff4444; 
-            --neon-cyan: #00f3ff; 
-            --bg-dark: #050505; 
+        * { box-sizing: border-box; }
+        body { background: #000; color: white; font-family: 'JetBrains Mono', monospace; margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        /* --- FIXED DASHBOARD --- */
+        .os-container { 
+            width: 95vw; height: 90vh; 
+            background: #0a0a0f; border: 2px solid var(--neon-cyan); 
+            display: flex; position: relative; z-index: 10;
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg-dark); color: white; font-family: 'JetBrains Mono', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        .os-container { width: 95%; max-width: 1100px; height: 85vh; background: rgba(10, 10, 20, 0.95); border: 2px solid var(--neon-cyan); border-radius: 15px; display: grid; grid-template-columns: 250px 1fr; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
-
-        /* LEFT PANEL: FAMILY MEMBERS */
-        .family-side { border-right: 1px solid rgba(0, 243, 255, 0.3); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .member-card { padding: 15px; border: 1px solid #333; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .member-card:hover, .member-card.active { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 10px; }
+        /* SIDEBAR - High Z-Index for clicking */
+        .sidebar { 
+            width: 250px; border-right: 1px solid #222; 
+            padding: 20px; display: flex; flex-direction: column; 
+            z-index: 20; background: #0d0d14;
+        }
+        .member { 
+            padding: 15px; border: 1px solid #333; margin-bottom: 12px; 
+            cursor: pointer; border-radius: 4px; text-align: center;
+            font-family: 'Orbitron'; font-size: 13px; transition: 0.2s;
+        }
+        .member:hover { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
+        .member.active { border-color: var(--neon-cyan); background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
 
         /* MAIN CONTENT */
-        .main-content { padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .stat-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 4px solid var(--neon-cyan); }
-        
-        /* ALERT BOX */
-        .alert-banner { padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; display: none; }
-        .alert-danger { display: block; background: rgba(255, 68, 68, 0.2); border: 1px solid var(--alert-red); color: var(--alert-red); animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.6; } }
+        .main { flex: 1; padding: 30px; display: flex; flex-direction: column; overflow-y: auto; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
+        .box { background: #000; border: 1px solid #222; padding: 20px; border-top: 3px solid var(--neon-cyan); }
+        .box h2 { font-family: 'Orbitron'; color: var(--neon-cyan); margin: 10px 0 0 0; font-size: 28px; }
 
-        /* INPUT AREA */
-        .input-group { background: #111; padding: 20px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid #333; }
-        input, select { background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; outline: none; }
-        button { background: var(--neon-cyan); border: none; padding: 10px 20px; color: black; font-weight: bold; cursor: pointer; border-radius: 5px; font-family: 'Orbitron'; }
+        /* INPUT FIX */
+        .input-section { margin-top: auto; padding-top: 20px; position: relative; z-index: 30; }
+        input { 
+            width: 100%; background: #111; border: 2px solid #333; 
+            color: #fff; padding: 18px; font-size: 18px; 
+            font-family: 'JetBrains Mono'; border-radius: 5px; outline: none;
+        }
+        input:focus { border-color: var(--neon-cyan); background: #000; }
+        
+        .btn-log { 
+            width: 100%; margin-top: 10px; padding: 15px; 
+            background: var(--neon-cyan); color: #000; border: none;
+            font-family: 'Orbitron'; font-weight: bold; font-size: 16px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-log:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+
+        /* BOOT SCREEN FIX (Transparent background after load) */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 100; display: flex; 
+            justify-content: center; align-items: center; transition: 0.5s;
+        }
     </style>
 </head>
 <body>
 
+    <div id="boot-screen">
+        <div style="text-align:center;">
+            <div style="font-family:'Orbitron'; color:var(--neon-cyan); font-size:24px; letter-spacing:8px; margin-bottom:10px;">AETHER_OS</div>
+            <div style="font-size:10px; color:#555;">REPAIRING_CLICK_INTERFACE... 100%</div>
+        </div>
+    </div>
+
     <div class="os-container">
-        <div class="family-side">
-            <h3 style="color:var(--neon-cyan); font-family: 'Orbitron'; margin-bottom: 20px;">FAMILY UNIT</h3>
-            <div class="member-card active" onclick="selectMember('Dad')">
-                <span class="status-dot" style="background:var(--safe-green)"></span> Dad
-            </div>
-            <div class="member-card" onclick="selectMember('Mom')">
-                <span class="status-dot" style="background:var(--safe-green)"></span> Mom
-            </div>
-            <div class="member-card" onclick="selectMember('Kid 1')">
-                <span class="status-dot" id="kid-status" style="background:var(--safe-green)"></span> Kid 1
+        <div class="sidebar">
+            <div style="font-family:'Orbitron'; color:var(--neon-cyan); font-size:10px; margin-bottom:30px;">[ SELECT_USER ]</div>
+            <div id="btn-Shivish" class="member active" onclick="changeUser('Shivish')">SHIVISH</div>
+            <div id="btn-Father" class="member" onclick="changeUser('Father')">FATHER</div>
+            <div id="btn-Mother" class="member" onclick="changeUser('Mother')">MOTHER</div>
+            
+            <div style="margin-top:auto; padding:10px; background:#000; font-size:11px; color:#555; border:1px solid #222;">
+                GOAL: <span id="goal-pro" style="color:var(--safe-green)">45g</span> Protein
             </div>
         </div>
 
-        <div class="main-content">
-            <div id="healthAlert" class="alert-banner alert-danger">ALERT: SUGAR LIMIT EXCEEDED</div>
+        <div class="main">
+            <h1 id="user-title" style="font-family:'Orbitron'; margin:0;">PROFILE: SHIVISH</h1>
             
-            <h1 id="memberName" style="font-family: 'Orbitron';">Profile: Dad</h1>
-            <p style="font-size: 12px; color: #888;">Lead Developer: Dharmendiran.ar</p>
-
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <p style="font-size: 12px; color: #888;">Calories</p>
-                    <h2 id="calVal">0</h2>
-                </div>
-                <div class="stat-box">
-                    <p style="font-size: 12px; color: #888;">Sugar (g)</p>
-                    <h2 id="sugarVal">0</h2>
-                </div>
-                <div class="stat-box">
-                    <p style="font-size: 12px; color: #888;">Protein (g)</p>
-                    <h2 id="proVal">0</h2>
-                </div>
+            <div class="stats">
+                <div class="box"><span>CALORIES</span><h2 id="stat-c">0</h2></div>
+                <div class="box"><span>SUGAR (g)</span><h2 id="stat-s">0</h2></div>
+                <div class="box"><span>PROTEIN (g)</span><h2 id="stat-p">0</h2></div>
             </div>
 
-            <div class="input-group">
-                <select id="foodItem">
-                    <option value="apple">Apple (10g sugar)</option>
-                    <option value="soda">Soda (40g sugar)</option>
-                    <option value="chicken">Chicken (0g sugar)</option>
-                    <option value="donut">Donut (25g sugar)</option>
-                </select>
-                <button onclick="addIntake()">LOG INTAKE</button>
-                <button style="background:#444; color:white;" onclick="resetStats()">RESET</button>
+            <div id="log-history" style="flex:1; border-top:1px solid #111; padding:15px; font-size:12px; color:#444; overflow-y:auto;">
+                System Ready for Input...
             </div>
 
-            <div id="history" style="font-size: 13px; color: #aaa; margin-top: 10px;">
-                Intake History: Waiting for data...
+            <div class="input-section">
+                <input type="text" id="food-input" placeholder="TYPE DISH NAME HERE...">
+                <button class="btn-log" onclick="executeLog()">LOG DATA</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // DATA OBJECTS
-        let currentMember = "Dad";
-        let familyData = {
-            "Dad": { cal: 0, sugar: 0, pro: 0 },
-            "Mom": { cal: 0, sugar: 0, pro: 0 },
-            "Kid 1": { cal: 0, sugar: 0, pro: 0 }
-        };
+<script>
+    // Database
+    const foodDB = {
+        "pizza": {c:280, s:5, p:12}, "pasta": {c:350, s:6, p:10}, "idli": {c:65, s:1, p:2},
+        "dosa": {c:170, s:1, p:4}, "chicken 65": {c:320, s:1, p:22}, "biryani": {c:500, s:2, p:18}
+    };
 
-        const foodDb = {
-            "apple": { cal: 52, sugar: 10, pro: 1 },
-            "soda": { cal: 150, sugar: 40, pro: 0 },
-            "chicken": { cal: 200, sugar: 0, pro: 30 },
-            "donut": { cal: 250, sugar: 25, pro: 2 }
-        };
+    let currentUser = "Shivish";
+    const userStore = {
+        "Shivish": {c:0, s:0, p:0, h:[], goal:45},
+        "Father": {c:0, s:0, p:0, h:[], goal:60},
+        "Mother": {c:0, s:0, p:0, h:[], goal:50}
+    };
 
-        function selectMember(name) {
-            currentMember = name;
-            document.getElementById('memberName').innerText = "Profile: " + name;
-            // Update active state in UI
-            document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            updateDisplay();
-        }
+    // Kill Boot Screen after 1 second
+    window.onload = () => {
+        setTimeout(() => {
+            document.getElementById('boot-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.display = 'none';
+            }, 500);
+        }, 1000);
+    };
 
-        function addIntake() {
-            const food = document.getElementById('foodItem').value;
-            const data = foodDb[food];
+    function changeUser(name) {
+        currentUser = name;
+        // Reset buttons
+        document.querySelectorAll('.member').forEach(m => m.classList.remove('active'));
+        document.getElementById('btn-' + name).classList.add('active');
+        // Update Title
+        document.getElementById('user-title').innerText = "PROFILE: " + name.toUpperCase();
+        // Update Side Goal
+        document.getElementById('goal-pro').innerText = userStore[name].goal + "g";
+        updateStats();
+    }
 
-            familyData[currentMember].cal += data.cal;
-            familyData[currentMember].sugar += data.sugar;
-            familyData[currentMember].pro += data.pro;
+    function executeLog() {
+        const input = document.getElementById('food-input');
+        const dish = input.value.toLowerCase().trim();
+        if(!dish) return;
 
-            updateDisplay();
-            checkAlerts();
-        }
+        const nutrition = foodDB[dish] || {c:200, s:5, p:5}; // Default if not in list
 
-        function updateDisplay() {
-            const m = familyData[currentMember];
-            document.getElementById('calVal').innerText = m.cal;
-            document.getElementById('sugarVal').innerText = m.sugar;
-            document.getElementById('proVal').innerText = m.pro;
-        }
+        userStore[currentUser].c += nutrition.c;
+        userStore[currentUser].s += nutrition.s;
+        userStore[currentUser].p += nutrition.p;
+        userStore[currentUser].h.unshift(`[${new Date().toLocaleTimeString()}] ${dish.toUpperCase()}`);
 
-        function checkAlerts() {
-            const sugar = familyData[currentMember].sugar;
-            const alertBox = document.getElementById('healthAlert');
-            
-            if (sugar > 35) {
-                alertBox.style.display = 'block';
-            } else {
-                alertBox.style.display = 'none';
-            }
-        }
+        input.value = "";
+        updateStats();
+    }
 
-        function resetStats() {
-            familyData[currentMember] = { cal: 0, sugar: 0, pro: 0 };
-            updateDisplay();
-            checkAlerts();
-        }
-    </script>
+    function updateStats() {
+        const u = userStore[currentUser];
+        document.getElementById('stat-c').innerText = u.c;
+        document.getElementById('stat-s').innerText = u.s;
+        document.getElementById('stat-p').innerText = u.p;
+        document.getElementById('log-history').innerHTML = u.h.join("<br>");
+    }
+</script>
 </body>
 </html>
