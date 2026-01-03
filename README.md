@@ -1,144 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>AETHER_HEALTH_FIX</title>
+    <title>AETHER HEALTH FIXED</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        body { background: #000; color: #00f3ff; font-family: 'Courier New', monospace; padding: 20px; }
         
-        body { 
-            background: #050505; color: white; font-family: sans-serif; 
-            margin: 0; padding: 20px; display: flex; gap: 20px; height: 95vh;
+        /* Sidebar */
+        #side { float: left; width: 200px; border: 2px solid #00f3ff; padding: 10px; min-height: 400px; }
+        .u-btn { 
+            display: block; width: 100%; padding: 15px; margin-bottom: 10px; 
+            background: #111; color: #00f3ff; border: 1px solid #00f3ff; 
+            cursor: pointer; font-weight: bold; text-align: left;
         }
+        .u-btn:active { background: #00f3ff; color: #000; }
+        .active-user { background: #00f3ff; color: #000; }
 
-        /* SIDEBAR */
-        #sidebar { 
-            width: 250px; background: #111; border: 2px solid #00f3ff; 
-            padding: 20px; display: flex; flex-direction: column; gap: 10px;
-        }
-        .user-btn { 
-            padding: 15px; background: #222; border: 1px solid #444; 
-            color: white; cursor: pointer; font-family: 'Orbitron'; text-align: left;
-        }
-        .user-btn:hover { background: #333; }
-        .user-btn.active { background: #00f3ff; color: black; font-weight: bold; }
+        /* Main */
+        #main { margin-left: 230px; border: 2px solid #00f3ff; padding: 20px; min-height: 400px; }
+        .box { display: inline-block; width: 30%; border: 1px solid #00f3ff; padding: 10px; text-align: center; }
+        h2 { font-size: 40px; margin: 10px 0; }
 
-        /* MAIN CONTENT */
-        #main { 
-            flex: 1; background: #111; border: 2px solid #00f3ff; 
-            padding: 30px; display: flex; flex-direction: column;
-        }
-        .stats-row { display: flex; gap: 20px; margin-bottom: 30px; }
-        .stat-card { 
-            flex: 1; background: #000; border: 1px solid #00f3ff; 
-            padding: 20px; text-align: center;
-        }
-        .stat-card h2 { font-family: 'Orbitron'; font-size: 35px; margin: 10px 0; color: #00f3ff; }
-
-        /* LOGGING */
-        .log-area { margin-top: auto; }
-        input { 
-            width: 70%; padding: 15px; font-size: 18px; 
-            background: #000; border: 1px solid #00f3ff; color: white; 
-        }
-        button#log-btn { 
-            width: 28%; padding: 15px; font-size: 18px; 
-            background: #00f3ff; color: black; font-family: 'Orbitron'; 
-            font-weight: bold; cursor: pointer; border: none;
-        }
-
-        #history { 
-            margin-top: 20px; height: 150px; overflow-y: auto; 
-            color: #888; border-top: 1px solid #222; padding-top: 10px;
-        }
+        /* Input */
+        #controls { margin-top: 30px; border-top: 2px solid #333; padding-top: 20px; }
+        input { padding: 15px; width: 60%; background: #000; border: 1px solid #00f3ff; color: #fff; font-size: 18px; }
+        button#log-btn { padding: 15px 30px; background: #00f3ff; color: #000; font-weight: bold; cursor: pointer; border: none; }
+        
+        #log { margin-top: 20px; height: 100px; overflow-y: auto; color: #555; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div id="sidebar">
-        <h3 style="font-family:'Orbitron'; color:#00f3ff; margin-top:0;">SELECT USER</h3>
-        <button class="user-btn active" onclick="switchUser('Shivish')">SHIVISH</button>
-        <button class="user-btn" onclick="switchUser('Father')">FATHER</button>
-        <button class="user-btn" onclick="switchUser('Mother')">MOTHER</button>
-        
-        <div style="margin-top:auto; font-size:12px; color:#555;">
-            PROTEIN GOAL: <span id="goal-text" style="color:#00ff88">45g</span>
-        </div>
+    <h1 style="text-align: center;">AETHER_HEALTH_SYSTEM_V18</h1>
+
+    <div id="side">
+        <p>SELECT USER:</p>
+        <button id="b-Shivish" class="u-btn active-user" onclick="selUser('Shivish')">SHIVISH</button>
+        <button id="b-Father" class="u-btn" onclick="selUser('Father')">FATHER</button>
+        <button id="b-Mother" class="u-btn" onclick="selUser('Mother')">MOTHER</button>
+        <hr>
+        <p>PROTEIN GOAL:</p>
+        <b id="goal-p">45g</b>
     </div>
 
     <div id="main">
-        <h1 id="title" style="font-family:'Orbitron'; margin:0 0 20px 0;">USER: SHIVISH</h1>
+        <h2 id="current-title">USER: SHIVISH</h2>
         
-        <div class="stats-row">
-            <div class="stat-card"><span>CALORIES</span><h2 id="c-val">0</h2></div>
-            <div class="stat-card"><span>SUGAR (g)</span><h2 id="s-val">0</h2></div>
-            <div class="stat-card"><span>PROTEIN (g)</span><h2 id="p-val">0</h2></div>
+        <div class="box">CALORIES<h2 id="v-c">0</h2></div>
+        <div class="box">SUGAR<h2 id="v-s">0</h2></div>
+        <div class="box">PROTEIN<h2 id="v-p">0</h2></div>
+
+        <div id="controls">
+            <input type="text" id="food" placeholder="Type: Pizza, Dosa, etc.">
+            <button id="log-btn" onclick="addFood()">LOG DISH</button>
         </div>
 
-        <div id="history">Log history is empty...</div>
-
-        <div class="log-area">
-            <input type="text" id="food-input" placeholder="Type: Pizza, Dosa, Idli...">
-            <button id="log-btn" onclick="addItem()">LOG DISH</button>
-        </div>
+        <div id="log">History log ready...</div>
     </div>
 
 <script>
-    // Simple Database
-    const foodList = {
+    // Database
+    var dishes = {
         "pizza": {c:280, s:5, p:12},
         "dosa": {c:170, s:1, p:4},
         "idli": {c:65, s:1, p:2},
-        "biryani": {c:550, s:2, p:18}
+        "biryani": {c:500, s:2, p:18}
     };
 
-    let currentUser = "Shivish";
-    const users = {
-        "Shivish": {c:0, s:0, p:0, h:[], goal:45},
-        "Father": {c:0, s:0, p:0, h:[], goal:60},
-        "Mother": {c:0, s:0, p:0, h:[], goal:50}
+    var current = "Shivish";
+    var users = {
+        "Shivish": {c:0, s:0, p:0, h:[], g:45},
+        "Father": {c:0, s:0, p:0, h:[], g:60},
+        "Mother": {c:0, s:0, p:0, h:[], g:50}
     };
 
-    function switchUser(name) {
-        currentUser = name;
+    function selUser(name) {
+        current = name;
         
         // Update Buttons
-        document.querySelectorAll('.user-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if(btn.innerText === name.toUpperCase()) btn.classList.add('active');
-        });
+        document.getElementById("b-Shivish").className = "u-btn";
+        document.getElementById("b-Father").className = "u-btn";
+        document.getElementById("b-Mother").className = "u-btn";
+        document.getElementById("b-" + name).className = "u-btn active-user";
 
-        // Update Text
-        document.getElementById('title').innerText = "USER: " + name.toUpperCase();
-        document.getElementById('goal-text').innerText = users[name].goal + "g";
+        document.getElementById("current-title").innerText = "USER: " + name.toUpperCase();
+        document.getElementById("goal-p").innerText = users[name].g + "g";
         
-        render();
+        refresh();
     }
 
-    function addItem() {
-        const input = document.getElementById('food-input');
-        const dish = input.value.toLowerCase().trim();
+    function addFood() {
+        var input = document.getElementById("food");
+        var val = input.value.toLowerCase().trim();
         
-        if(dish === "") return;
+        if (val == "") return;
 
-        // Get nutrients (or default if not in list)
-        const stats = foodList[dish] || {c:200, s:5, p:5};
+        var stats = dishes[val] || {c:200, s:5, p:5}; // Default if not in list
 
-        users[currentUser].c += stats.c;
-        users[currentUser].s += stats.s;
-        users[currentUser].p += stats.p;
-        users[currentUser].h.unshift(new Date().toLocaleTimeString() + " - " + dish.toUpperCase());
+        users[current].c += stats.c;
+        users[current].s += stats.s;
+        users[current].p += stats.p;
+        users[current].h.unshift(new Date().toLocaleTimeString() + " - " + val.toUpperCase());
 
         input.value = "";
-        render();
+        refresh();
     }
 
-    function render() {
-        const u = users[currentUser];
-        document.getElementById('c-val').innerText = u.c;
-        document.getElementById('s-val').innerText = u.s;
-        document.getElementById('p-val').innerText = u.p;
-        document.getElementById('history').innerHTML = u.h.join("<br>");
+    function refresh() {
+        var u = users[current];
+        document.getElementById("v-c").innerText = u.c;
+        document.getElementById("v-s").innerText = u.s;
+        document.getElementById("v-p").innerText = u.p;
+        document.getElementById("log").innerHTML = u.h.join("<br>");
     }
 </script>
 
